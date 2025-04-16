@@ -32,7 +32,7 @@ export default function Home() {
             </p>
           </div>
           <Link
-            href="/appointment/page"
+            href="/appointment"
             className="bg-emerald-500 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-emerald-600 transition mt-4"
           >
             Book Now

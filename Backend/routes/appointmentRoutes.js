@@ -1,12 +1,14 @@
 const express = require('express');
-const router = express.router();
+const router = express.Router();
+const {
+  createAppointment,
+  getAppointments,
+  updateAppointment
+} = require('../controllers/appointmentController');
 
-const {createAppointment, getAppointments, updateAppointment, getAvailableMechanics} = require('../controllers/appointmentController');
-const {verifyToken, checkAdmin} = require('../middleware/auth');
-
-router.post('/', verifyToken, createAppointment);
-router.get('/', verifyToken, getAppointments);
-router.put('/:id', verifyToken, checkAdmin, updateAppointment);
-router.get('/mechanics', verifyToken, getAvailableMechanics);
+// userId will be passed in request header
+router.post('/', createAppointment);
+router.get('/', getAppointments);
+router.patch('/:id', updateAppointment);
 
 module.exports = router;

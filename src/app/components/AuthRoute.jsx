@@ -7,40 +7,22 @@ export default function AuthRoute({ children, adminOnly = false }) {
   const [verified, setVerified] = useState(false);
 
   useEffect(() => {
-    const verifyAuth = async () => {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        router.push('/login');
-        return;
-      }
+    const userId = localStorage.getItem('userId');
+    const role = localStorage.getItem('role');
 
-      if (adminOnly) {
-        try {
-          const res = await fetch('http://localhost:5000/api/auth/check-admin', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          
-          if (!res.ok) {
-            router.push('/');
-            return;
-          }
-        } catch (error) {
-          console.error('Admin check failed:', error);
-          router.push('/');
-          return;
-        }
-      }
+    if (!userId) {
+      router.push('/login');
+      return;
+    }
 
-      setVerified(true);
-    };
+    if (adminOnly && role !== 'admin') {
+      router.push('/');
+      return;
+    }
 
-    verifyAuth();
-  }, []);
+    setVerified(true);
+  }, [router]);
 
   if (!verified) return <div>Loading...</div>;
-
   return children;
 }

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -10,20 +11,17 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-        router.push(data.user.role === 'admin' ? '/admin' : '/appointment');
-      } else {
-        setError(data.error || 'Login failed');
-      }
-    } catch {
-      setError('Failed to connect to server');
+      const res = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const data = res.data;
+
+      // ✅ Store user ID and role for session
+      localStorage.setItem('userId', data._id);
+      localStorage.setItem('role', data.role);
+
+      router.push(data.role === 'admin' ? '/admin' : '/');
+    } catch (err) {
+      const message = err.response?.data?.error || 'Login failed';
+      setError(message);
     }
   };
 
@@ -33,11 +31,16 @@ export default function Login() {
         <h1 className="text-3xl font-semibold mb-6 text-center text-blue-700">Log In</h1>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="email" placeholder="Email" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-          <input type="password" placeholder="Password" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-          <button type="submit" className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-lg hover:opacity-90 transition">
+          <input type="email" placeholder="Email"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          />
+          <input type="password" placeholder="Password"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          />
+          <button type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:opacity-90 transition">
             Login
           </button>
         </form>

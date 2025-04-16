@@ -1,7 +1,7 @@
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+// Helper: Compare plain vs hashed password
 const comparePassword = async (plainPassword, hashedPassword) => {
   try {
     const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
@@ -12,94 +12,84 @@ const comparePassword = async (plainPassword, hashedPassword) => {
   }
 };
 
-// exports.createAdmin = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-    
-//     // Generate salt and hash
-//     const salt = await bcrypt.genSalt(10);
-//     const hashedPassword = await bcrypt.hash(password, salt);
 
-//     const admin = await User.create({
-//       name: 'Admin',
-//       email,
-//       password: hashedPassword,
-//       phone: '000-000-0000',
-//       role: 'admin'
-//     });
+exports.createAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-//     res.status(201).json(admin);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+    const admin = new User({
+      name: 'Admin',
+      email,
+      password,
+      phone: '000-000-0000',
+      role: 'admin'
+    });
 
+    await admin.save(); // ✅ Triggers pre-save hook for hashing
+
+    res.status(201).json(admin);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+// Signup
 exports.signup = async (req, res) => {
   try {
     const { name, email, licenseNumber, engineNumber, password, phone, address } = req.body;
-    
-    // Check existing user
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
-    }
 
-    const user = await User.create({ 
-      name, 
-      email,
-      licenseNumber,
-      engineNumber, 
-      password, // Will be hashed by pre-save hook
-      phone,
-      address 
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ error: 'User already exists' });
+
+    const user = await User.create({
+      name, email, licenseNumber, engineNumber, password, phone, address
     });
 
-    res.status(201).json({ 
+    res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      role: user.role 
+      role: user.role
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+// Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    if (!comparePassword(password, user.password)){
-      return res.status(401).json({error: 'Invalid password'});
-    }
-    const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
 
-    res.json({ 
-      token,
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+    const user = await User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const isMatch = await comparePassword(password, user.password);
+    if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-
+// Check admin
 exports.checkAdmin = async (req, res) => {
+  const userId = req.body.userid;
+
+  if (!userId) return res.status(400).json({ error: 'User ID missing in body' });
+
   try {
-    const user = await User.findById(req.user.userId);
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
     res.json({ isAdmin: user.role === 'admin' });
   } catch (error) {
     res.status(500).json({ error: error.message });

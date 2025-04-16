@@ -1,18 +1,11 @@
 const express = require('express');
-const { signup, login } = require('../controllers/authController');
+const { signup, login, checkAdmin, createAdmin } = require('../controllers/authController');
 const router = express.Router();
-const verifyToken = require('../middleware/auth')
-const {checkAdmin} = require('../controllers/authController')
-// const {createAdmin} = require('../controllers/authController');
 
-router.get('/check-admin', verifyToken, checkAdmin);
-// remove after creating admin
-// router.post('/create-admin', createAdmin);
-
-// POST /api/auth/signup
 router.post('/signup', signup);
-
-//POST /api/auth/login
 router.post('/login', login);
+router.post('/create-admin', createAdmin);
+
+router.get('/check-admin', checkAdmin);
 
 module.exports = router;

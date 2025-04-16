@@ -1,46 +1,40 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import AuthRoute from '../../app/components/AuthRoute';
+import NavbarWrapper from '../../app/components/navbar/NavbarWrapper';
+import AppointmentTable from '../../app/components/AppointmentTable/AppointmentTable';
+import MechanicManagement from '../../app/components/MechanicManage/MechanicManagement';
 
 export default function AdminPage() {
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const verifyAdmin = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
-      try {
-        const res = await fetch('http://localhost:5000/api/auth/check-admin', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        
-        const data = await res.json();
-        setIsAdmin(data.isAdmin);
-        if (!data.isAdmin) window.location.href = '/';
-      } catch (error) {
-        console.error('Admin check failed:', error);
-      }
-    };
-
-    verifyAdmin();
-  }, []);
+  const [activeTab, setActiveTab] = useState('appointments');
 
   return (
-    <AuthRoute>
+    <AuthRoute adminOnly>
+      <NavbarWrapper textColor="text-black" />
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-        {isAdmin ? (
-          <div className="bg-green-100 p-4 rounded-lg">
-            <p>Welcome Admin!</p>
-            {/* Add admin features later */}
-          </div>
+        <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+
+        {/* Tab Navigation */}
+        <div className="flex border-b mb-4">
+          <button
+            className={`px-4 py-2 ${activeTab === 'appointments' ? 'border-b-2 border-blue-500' : ''}`}
+            onClick={() => setActiveTab('appointments')}
+          >
+            Appointments
+          </button>
+          <button
+            className={`px-4 py-2 ${activeTab === 'mechanics' ? 'border-b-2 border-blue-500' : ''}`}
+            onClick={() => setActiveTab('mechanics')}
+          >
+            Manage Mechanics
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'appointments' ? (
+          <AppointmentTable />
         ) : (
-          <div className="bg-red-100 p-4 rounded-lg">
-            <p>You don't have admin privileges</p>
-          </div>
+          <MechanicManagement />
         )}
       </div>
     </AuthRoute>
