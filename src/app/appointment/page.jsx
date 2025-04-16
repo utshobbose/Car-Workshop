@@ -75,86 +75,150 @@ export default function AppointmentPage() {
     }
   };
 
-  return (
-    <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-6 text-center text-blue-600">
-        Book Your Appointment
-      </h1>
+//   return (
+//     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
+//       <h1 className="text-2xl font-bold mb-6 text-center text-blue-600">
+//         Book Your Appointment
+//       </h1>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-          {error}
-        </div>
-      )}
+//       {error && (
+//         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+//           {error}
+//         </div>
+//       )}
+
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <div>
+//           <label className="block text-gray-700 mb-2">Appointment Date</label>
+//           <input
+//             type="date"
+//             className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+//             min={new Date().toISOString().split('T')[0]}
+//             value={selectedDate}
+//             onChange={(e) => setSelectedDate(e.target.value)}
+//             required
+//           />
+//         </div>
+
+//         <div>
+//           <label className="block text-gray-700 mb-2">Select Mechanic</label>
+//           <select
+//             className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+//             value={selectedMechanic}
+//             onChange={(e) => setSelectedMechanic(e.target.value)}
+//             required
+//             disabled={!selectedDate}
+//           >
+//             <option value="">Choose a mechanic</option>
+//             {Array.isArray(mechanics) &&
+//              mechanics.map(mechanic => (
+//               <option key={mechanic._id} value={mechanic._id} disabled={mechanic.availableSlots === 0}>
+//                 {mechanic.name} - {mechanic.availableSlots} slots available
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+
+//         <div className="space-y-4">
+//           <div>
+//             <label className="block text-gray-700 mb-2">License Number</label>
+//             <input
+//               type="text"
+//               className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+//               placeholder="e.g., ABC123"
+//               value={carDetails.licenseNumber}
+//               onChange={(e) => setCarDetails({ ...carDetails, licenseNumber: e.target.value.toUpperCase() })}
+//               required
+//             />
+//           </div>
+
+//           <div>
+//             <label className="block text-gray-700 mb-2">Engine Number</label>
+//             <input
+//               type="text"
+//               className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+//               placeholder="Engine number"
+//               value={carDetails.engineNumber}
+//               onChange={(e) => setCarDetails({ ...carDetails, engineNumber: e.target.value })}
+//               required
+//             />
+//           </div>
+//         </div>
+
+//         <button
+//           type="submit"
+//           disabled={isSubmitting}
+//           className={`w-full py-2 px-4 text-white rounded-md transition-colors ${
+//             isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+//           }`}
+//         >
+//           {isSubmitting ? 'Booking...' : 'Book Appointment'}
+//         </button>
+//       </form>
+//     </div>
+//   );
+// }
+return (
+  <div className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-gray-100 to-blue-200">
+    <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
+      <h1 className="text-3xl font-semibold mb-6 text-center text-blue-700">Book Your Appointment</h1>
+
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-gray-700 mb-2">Appointment Date</label>
-          <input
-            type="date"
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-            min={new Date().toISOString().split('T')[0]}
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            required
-          />
-        </div>
+        <input
+          type="date"
+          min={new Date().toISOString().split('T')[0]}
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          required
+        />
 
-        <div>
-          <label className="block text-gray-700 mb-2">Select Mechanic</label>
-          <select
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-            value={selectedMechanic}
-            onChange={(e) => setSelectedMechanic(e.target.value)}
-            required
-            disabled={!selectedDate}
-          >
-            <option value="">Choose a mechanic</option>
-            {Array.isArray(mechanics) &&
-             mechanics.map(mechanic => (
-              <option key={mechanic._id} value={mechanic._id} disabled={mechanic.availableSlots === 0}>
-                {mechanic.name} - {mechanic.availableSlots} slots available
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          value={selectedMechanic}
+          onChange={(e) => setSelectedMechanic(e.target.value)}
+          required
+          disabled={!selectedDate}
+        >
+          <option value="">Choose a mechanic</option>
+          {Array.isArray(mechanics) && mechanics.map(mechanic => (
+            <option key={mechanic._id} value={mechanic._id} disabled={mechanic.availableSlots === 0}>
+              {mechanic.name} - {mechanic.availableSlots} slots available
+            </option>
+          ))}
+        </select>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-gray-700 mb-2">License Number</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-              placeholder="e.g., ABC123"
-              value={carDetails.licenseNumber}
-              onChange={(e) => setCarDetails({ ...carDetails, licenseNumber: e.target.value.toUpperCase() })}
-              required
-            />
-          </div>
+        <input
+          type="text"
+          placeholder="License Number"
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          value={carDetails.licenseNumber}
+          onChange={(e) => setCarDetails({ ...carDetails, licenseNumber: e.target.value.toUpperCase() })}
+          required
+        />
 
-          <div>
-            <label className="block text-gray-700 mb-2">Engine Number</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-              placeholder="Engine number"
-              value={carDetails.engineNumber}
-              onChange={(e) => setCarDetails({ ...carDetails, engineNumber: e.target.value })}
-              required
-            />
-          </div>
-        </div>
+        <input
+          type="text"
+          placeholder="Engine Number"
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          value={carDetails.engineNumber}
+          onChange={(e) => setCarDetails({ ...carDetails, engineNumber: e.target.value })}
+          required
+        />
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-2 px-4 text-white rounded-md transition-colors ${
-            isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          className={`w-full bg-blue-600 text-white py-2 rounded-lg hover:opacity-90 transition ${
+            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
           {isSubmitting ? 'Booking...' : 'Book Appointment'}
         </button>
       </form>
     </div>
-  );
+  </div>
+);
 }
