@@ -38,7 +38,7 @@ export default function AppointmentTable() {
   }, [userId, role]);
 
   const handleUpdate = async (id, field, value) => {
-    const res = await fetch(`http://localhost:5000/api/appointments/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

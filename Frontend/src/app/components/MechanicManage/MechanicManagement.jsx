@@ -32,7 +32,7 @@ export default function MechanicManagement() {
   };
 
   const toggleMechanic = async (id, isActive) => {
-    const res = await fetch(`http://localhost:5000/api/mechanics/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

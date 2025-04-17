@@ -38,7 +38,7 @@ export default function AppointmentPage() {
   useEffect(() => {
     if (selectedDate) {
       const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
-      fetch(`http://localhost:5000/api/mechanics?date=${formattedDate}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics?date=${formattedDate}`)
         .then(res => res.json())
         .then(data => setMechanics(data))
         .catch(() => setError('Failed to load mechanics'));
@@ -67,7 +67,7 @@ export default function AppointmentPage() {
     
 
     try {
-      const response = await fetch('http://localhost:5000/api/appointments', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/api/appointments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
