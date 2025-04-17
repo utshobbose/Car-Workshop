@@ -30,7 +30,8 @@ const getMechanicAvailability = async (date) => {
       }
     ]);
   
-    return mechanics.filter(m => m.availableSlots > 0);
+    // return mechanics.filter(m => m.availableSlots > 0);
+    return mechanics;
   };
   
   module.exports = { getMechanicAvailability };

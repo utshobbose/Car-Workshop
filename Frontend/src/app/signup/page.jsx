@@ -4,8 +4,13 @@ import { useRouter } from "next/navigation";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
-    name: '', email: '', password: '',
-    phone: '', address: '', licenseNumber: '', engineNumber: ''
+    name: '',
+    address: '',
+    phone: '',
+    licenseNumber: '',
+    engineNumber: '',
+    email: '',
+    password: ''
   });
   const [error, setError] = useState('');
   const router = useRouter();
