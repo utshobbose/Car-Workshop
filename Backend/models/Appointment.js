@@ -14,20 +14,14 @@ const appointmentSchema = new mongoose.Schema({
   carDetails: {
     licenseNumber: { 
       type: String, 
-      required: true,
-      validate: {
-        validator: v => /^[A-Z0-9]{6,12}$/.test(v),
-        message: 'Invalid license number format'
-      }
+      required: true
+    },
     },
     engineNumber: { 
       type: String, 
-      required: true,
-      validate: {
-        validator: v => /^[A-Z0-9]{6,12}$/.test(v),
-        message: 'Invalid engine number format'
-      }
-    }
+      required: true
+    
+    
   },
   appointmentDate: { 
     type: Date, 

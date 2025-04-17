@@ -27,9 +27,18 @@ export default function AppointmentPage() {
     }
   }, []);
 
+  // useEffect(() => {
+  //   if (selectedDate) {
+  //     fetch(`http://localhost:5000/api/mechanics?date=${selectedDate}`)
+  //       .then(res => res.json())
+  //       .then(data => setMechanics(data))
+  //       .catch(() => setError('Failed to load mechanics'));
+  //   }
+  // }, [selectedDate]);
   useEffect(() => {
     if (selectedDate) {
-      fetch(`http://localhost:5000/api/mechanics?date=${selectedDate}`)
+      const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+      fetch(`http://localhost:5000/api/mechanics?date=${formattedDate}`)
         .then(res => res.json())
         .then(data => setMechanics(data))
         .catch(() => setError('Failed to load mechanics'));
@@ -41,11 +50,21 @@ export default function AppointmentPage() {
     setIsSubmitting(true);
     setError('');
 
-    if (!selectedDate || !selectedMechanic || !carDetails.licenseNumber || !carDetails.engineNumber) {
+    if (
+      !selectedDate ||
+      !selectedMechanic ||
+      !carDetails.licenseNumber.trim() ||
+      !carDetails.engineNumber.trim()
+    ) {
       setError('All fields are required');
       setIsSubmitting(false);
+      // console.log("Date:", selectedDate);
+      // console.log("Mechanic:", selectedMechanic);
+      // console.log("License:", carDetails.licenseNumber);
+      // console.log("Engine:", carDetails.engineNumber);
       return;
     }
+    
 
     try {
       const response = await fetch('http://localhost:5000/api/appointments', {
@@ -99,12 +118,16 @@ return (
           required
           disabled={!selectedDate}
         >
-          <option value="">Choose a mechanic</option>
-          {Array.isArray(mechanics) && mechanics.map(mechanic => (
+        {mechanics.length === 0 ? (
+          <option disabled>No mechanics available</option>
+        ) : (
+          mechanics.map(mechanic => (
             <option key={mechanic._id} value={mechanic._id} disabled={mechanic.availableSlots === 0}>
               {mechanic.name} - {mechanic.availableSlots} slots available
             </option>
-          ))}
+          ))
+        )}
+
         </select>
 
         <input

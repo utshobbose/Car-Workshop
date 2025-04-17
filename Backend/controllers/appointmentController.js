@@ -9,11 +9,26 @@ const createAppointment = async (req, res) => {
     const userId = req.body.userId;
     const { mechanicId, carDetails, appointmentDate } = req.body;
 
+    // const existing = await Appointment.findOne({
+    //   user: userId,
+    //   appointmentDate: new Date(appointmentDate)
+    // });
+    // if (existing) return res.status(400).json({ error: 'Existing appointment on this date' });
+    const startOfDay = new Date(appointmentDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date(appointmentDate);
+    endOfDay.setHours(23, 59, 59, 999);
+    
     const existing = await Appointment.findOne({
       user: userId,
-      appointmentDate: new Date(appointmentDate)
+      appointmentDate: {
+        $gte: startOfDay,
+        $lt: endOfDay
+      }
     });
-    if (existing) return res.status(400).json({ error: 'Existing appointment on this date' });
+    
+    
 
     const [mechanic, appointmentCount] = await Promise.all([
       Mechanic.findById(mechanicId),
