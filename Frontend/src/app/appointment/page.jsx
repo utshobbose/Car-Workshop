@@ -67,7 +67,7 @@ export default function AppointmentPage() {
     
 
     try {
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/api/appointments', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
