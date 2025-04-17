@@ -25,7 +25,7 @@ exports.createAdmin = async (req, res) => {
       role: 'admin'
     });
 
-    await admin.save(); // ✅ Triggers pre-save hook for hashing
+    await admin.save(); // Triggers pre-save hook for hashing
 
     res.status(201).json(admin);
   } catch (error) {
