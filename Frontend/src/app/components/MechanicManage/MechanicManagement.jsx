@@ -9,13 +9,13 @@ export default function MechanicManagement() {
   const role = localStorage.getItem('role');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/mechanics')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics`)
       .then(res => res.json())
       .then(setMechanics);
   }, []);
 
   const addMechanic = async () => {
-    const res = await fetch('http://localhost:5000/api/mechanics', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
