@@ -19,13 +19,13 @@ export default function AppointmentTable() {
 
     const fetchData = async () => {
       const [appsRes, mechRes] = await Promise.all([
-        fetch('http://localhost:5000/api/appointments', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments`, {
           headers: {
             'user-id': userId,
             'user-role': role
           }
         }),
-        fetch('http://localhost:5000/api/mechanics')
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics`)
       ]);
 
       const apps = await appsRes.json();
