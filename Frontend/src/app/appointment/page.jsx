@@ -75,6 +75,7 @@ export default function AppointmentPage() {
           'user-role': role
         },
         body: JSON.stringify({
+          userId,
           mechanicId: selectedMechanic,
           carDetails,
           appointmentDate: selectedDate
