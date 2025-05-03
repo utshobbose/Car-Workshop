@@ -22,7 +22,7 @@
             <p><strong>Engine No:</strong> {appointment.engine}</p>
             </div>
         ) : (
-            <p>Loading your appointment...</p>
+            <p>Thank you for booking. Your appointment has been successfully recorded.</p>
         )}
         </div>
     </div>
