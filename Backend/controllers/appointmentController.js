@@ -14,11 +14,8 @@ const createAppointment = async (req, res) => {
     endOfDay.setHours(23, 59, 59, 999);
 
     const existing = await Appointment.findOne({
-      userId, 
-      appointmentDate: {
-        $gte: startOfDay,
-        $lt: endOfDay
-      }
+      userId,
+      appointmentDate: { $gte: startOfDay, $lt: endOfDay }
     });
 
     if (existing) {
@@ -28,7 +25,7 @@ const createAppointment = async (req, res) => {
     const [mechanic, appointmentCount] = await Promise.all([
       Mechanic.findById(mechanicId),
       Appointment.countDocuments({
-        mechanicId, 
+        mechanicId,
         appointmentDate: new Date(appointmentDate)
       })
     ]);
@@ -40,8 +37,8 @@ const createAppointment = async (req, res) => {
     }
 
     const newAppointment = await Appointment.create({
-      userId, 
-      mechanicId, 
+      userId,
+      mechanicId,
       carDetails,
       appointmentDate: new Date(appointmentDate)
     });
@@ -52,7 +49,7 @@ const createAppointment = async (req, res) => {
   }
 };
 
-
+// Get appointments for user or admin
 const getAppointments = async (req, res) => {
   try {
     const userId = req.headers['user-id'];
@@ -70,15 +67,15 @@ const getAppointments = async (req, res) => {
   }
 };
 
-
+// Update appointment (admin only)
 const updateAppointment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { mechanic, appointmentDate } = req.body;
+    const { mechanicId, appointmentDate, status } = req.body;
 
-    if (mechanic || appointmentDate) {
+    if (mechanicId || appointmentDate) {
       const count = await Appointment.countDocuments({
-        mechanic: mechanic,
+        mechanicId,
         appointmentDate: new Date(appointmentDate)
       });
 
@@ -91,7 +88,8 @@ const updateAppointment = async (req, res) => {
       id,
       req.body,
       { new: true, runValidators: true }
-    ).populate('mechanic', 'name');
+    ).populate('userId', 'name phone')
+     .populate('mechanicId', 'name');
 
     res.json(updated);
   } catch (error) {

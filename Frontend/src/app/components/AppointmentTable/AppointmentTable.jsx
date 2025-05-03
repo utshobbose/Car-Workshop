@@ -70,8 +70,8 @@ export default function AppointmentTable() {
         <tbody>
           {appointments.map(appointment => (
             <tr key={appointment._id}>
-              <td className="py-2 px-4 border-b">{appointment.user?.name}</td>
-              <td className="py-2 px-4 border-b">{appointment.carDetails.licenseNumber}</td>
+              <td className="py-2 px-4 border-b">{appointment.userId?.name}</td>
+              <td className="py-2 px-4 border-b">{appointment.carDetails?.licenseNumber}</td>
               <td className="py-2 px-4 border-b">
                 <input
                   type="date"
@@ -82,8 +82,8 @@ export default function AppointmentTable() {
               </td>
               <td className="py-2 px-4 border-b">
                 <select
-                  value={appointment.mechanic?._id}
-                  onChange={(e) => handleUpdate(appointment._id, 'mechanic', e.target.value)}
+                  value={appointment.mechanicId?._id}
+                  onChange={(e) => handleUpdate(appointment._id, 'mechanicId', e.target.value)}
                   className="border p-1 rounded"
                 >
                   {mechanics.map(mechanic => (
