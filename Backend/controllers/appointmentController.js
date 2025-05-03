@@ -55,13 +55,13 @@ const createAppointment = async (req, res) => {
 
 const getAppointments = async (req, res) => {
   try {
-    const userId = req.headers['userid'];
-    const role = req.headers['role'];
+    const userId = req.headers['user-id'];
+    const role = req.headers['user-role'];
     const filter = role === 'admin' ? {} : { userId };
 
     const appointments = await Appointment.find(filter)
-      .populate('user', 'name phone')
-      .populate('mechanic', 'name')
+      .populate('userId', 'name phone')
+      .populate('mechanicId', 'name')
       .sort('-createdAt');
 
     res.json(appointments);
@@ -69,6 +69,7 @@ const getAppointments = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const updateAppointment = async (req, res) => {
   try {
