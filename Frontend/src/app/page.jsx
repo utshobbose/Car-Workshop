@@ -46,8 +46,8 @@
 //       </div>
 //     </div>
 //   );
-import Hero from "./components/hero/Hero";
-import Footer from "./components/footer/Footer";
+import Hero from "./components/hero/hero";
+import Footer from "./components/footer/footer";
 import Navbar from "./components/navbar/Navbar";
 
 export default function Home() {
