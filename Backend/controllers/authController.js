@@ -4,15 +4,14 @@ const bcrypt = require('bcryptjs');
 // Helper: Compare plain vs hashed password
 const comparePassword = async (plainPassword, hashedPassword) => {
   try {
-    const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
-    return isMatch;
+    return await bcrypt.compare(plainPassword, hashedPassword);
   } catch (error) {
     console.error('Error comparing passwords:', error);
     return false;
   }
 };
 
-
+// Create Admin (default car info not required)
 exports.createAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -25,7 +24,7 @@ exports.createAdmin = async (req, res) => {
       role: 'admin'
     });
 
-    await admin.save(); // Triggers pre-save hook for hashing
+    await admin.save(); // Will hash password via pre-save hook
 
     res.status(201).json(admin);
   } catch (error) {
@@ -33,18 +32,31 @@ exports.createAdmin = async (req, res) => {
   }
 };
 
-
-
-// Signup
+// Signup - saves car info in `cars` array
 exports.signup = async (req, res) => {
   try {
     const { name, email, licenseNumber, engineNumber, password, phone, address } = req.body;
+
+    // Basic validation
+    if (!name || !email || !licenseNumber || !engineNumber || !password || !phone) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ error: 'User already exists' });
 
     const user = await User.create({
-      name, email, licenseNumber, engineNumber, password, phone, address
+      name,
+      email,
+      password,
+      phone,
+      address,
+      cars: [
+        {
+          licenseNumber,
+          engineNumber
+        }
+      ]
     });
 
     res.status(201).json({
@@ -80,7 +92,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// Check admin
+// Check admin role
 exports.checkAdmin = async (req, res) => {
   const userId = req.body.userid;
 

@@ -23,7 +23,8 @@ app.use('/api/mechanics', mechanicRoutes);
 
 app.use('/api/appointments', appointmentRoutes);
 
-app.use('/api/user/me', userRoutes);
+// app.use('/api/user/me', userRoutes);
+app.use('/api/users', userRoutes);
 
 // Test Route
 app.get('/test', (req, res) => {

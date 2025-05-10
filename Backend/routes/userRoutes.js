@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 
-// Get all users
+// Get all users (for admin/debugging)
 router.get('/', async (req, res) => {
   try {
     const users = await User.find().select('-password');
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get user by ID (from params)
+// Get user by ID
 router.get('/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Get current user from header userId
+// Get current user from header
 router.get('/me', async (req, res) => {
   try {
     const userId = req.headers['userid'];
@@ -32,6 +32,27 @@ router.get('/me', async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Add a new car to current user
+router.post('/me/add-car', async (req, res) => {
+  const { userId, licenseNumber, engineNumber } = req.body;
+
+  if (!userId || !licenseNumber || !engineNumber) {
+    return res.status(400).json({ error: 'Missing car details' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    user.cars.push({ licenseNumber, engineNumber });
+    await user.save();
+
+    res.status(200).json({ message: 'New car added', cars: user.cars });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add car' });
   }
 });
 

@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import AuthRoute from '../../app/components/AuthRoute';
-import NavbarWrapper from '../../app/components/navbar/NavbarWrapper';
-import AppointmentTable from '../../app/components/AppointmentTable/AppointmentTable';
-import MechanicManagement from '../../app/components/MechanicManage/MechanicManagement';
+import AuthRoute from '../components/AuthRoute';
+import NavbarWrapper from '../components/navbar/NavbarWrapper';
+import AppointmentTable from '../components/AppointmentTable/AppointmentTable';
+import MechanicManagement from '../components/MechanicManage/MechanicManagement';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('appointments');

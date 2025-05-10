@@ -4,8 +4,11 @@ const Mechanic = require('../models/Mechanic');
 // Create appointment with full validation
 const createAppointment = async (req, res) => {
   try {
-    const userId = req.body.userId;
-    const { mechanicId, carDetails, appointmentDate } = req.body;
+    const { userId, mechanicId, carDetails, appointmentDate } = req.body;
+
+    if (!userId || !mechanicId || !appointmentDate || !carDetails?.licenseNumber || !carDetails?.engineNumber) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
 
     const startOfDay = new Date(appointmentDate);
     startOfDay.setHours(0, 0, 0, 0);
@@ -73,7 +76,7 @@ const updateAppointment = async (req, res) => {
     const { id } = req.params;
     const { mechanicId, appointmentDate, status } = req.body;
 
-    if (mechanicId || appointmentDate) {
+    if (mechanicId && appointmentDate) {
       const count = await Appointment.countDocuments({
         mechanicId,
         appointmentDate: new Date(appointmentDate)
@@ -88,8 +91,9 @@ const updateAppointment = async (req, res) => {
       id,
       req.body,
       { new: true, runValidators: true }
-    ).populate('userId', 'name phone')
-     .populate('mechanicId', 'name');
+    )
+      .populate('userId', 'name phone')
+      .populate('mechanicId', 'name');
 
     res.json(updated);
   } catch (error) {
