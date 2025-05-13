@@ -11,7 +11,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, formData);
+      const res = await axios.post(`${backend}/api/auth/login`, formData);
       const data = res.data;
 
       // ✅ Store user ID and role for session

@@ -9,13 +9,13 @@ export default function MechanicManagement() {
   const role = localStorage.getItem('role');
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics`)
+    fetch(`${backend}/api/mechanics`)
       .then(res => res.json())
       .then(setMechanics);
   }, []);
 
   const addMechanic = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics`, {
+    const res = await fetch(`${backend}/api/mechanics`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export default function MechanicManagement() {
   };
 
   const toggleMechanic = async (id, isActive) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics/${id}`, {
+    const res = await fetch(`${backend}/api/mechanics/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

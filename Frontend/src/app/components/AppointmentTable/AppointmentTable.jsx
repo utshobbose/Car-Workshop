@@ -19,13 +19,13 @@ export default function AppointmentTable() {
 
     const fetchData = async () => {
       const [appsRes, mechRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments`, {
+        fetch(`${backend}/api/appointments`, {
           headers: {
             'user-id': userId,
             'user-role': role
           }
         }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics`)
+        fetch(`${backend}/api/mechanics`)
       ]);
 
       const apps = await appsRes.json();
@@ -38,7 +38,7 @@ export default function AppointmentTable() {
   }, [userId, role]);
 
   const handleUpdate = async (id, field, value) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments/${id}`, {
+    const res = await fetch(`${backend}/api/appointments/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

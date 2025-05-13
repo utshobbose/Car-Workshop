@@ -22,7 +22,7 @@ export default function AppointmentPage() {
       const r = localStorage.getItem('role') || '';
       setUserId(uid);
       setRole(r);
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
+      fetch(`${backend}/api/users/me`, {
         headers: { userid: uid }
       })
         .then(res => res.json())
@@ -33,7 +33,7 @@ export default function AppointmentPage() {
   useEffect(() => {
     if (selectedDate) {
       const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/mechanics?date=${formattedDate}`)
+      fetch(`${backend}/api/mechanics?date=${formattedDate}`)
         .then(res => res.json())
         .then(data => setMechanics(data))
         .catch(() => setError('Failed to load mechanics'));
@@ -72,7 +72,7 @@ export default function AppointmentPage() {
 
     // Optionally save new car before appointment
     if (addNewCar) {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me/add-car`, {
+      const res = await fetch(`${backend}/api/users/me/add-car`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,7 +89,7 @@ export default function AppointmentPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/appointments`, {
+      const response = await fetch(`${backend}/api/appointments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
