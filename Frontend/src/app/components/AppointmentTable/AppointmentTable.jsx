@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { backend } from '@/app/context(testing)/api';
 
 export default function AppointmentTable() {
   const [appointments, setAppointments] = useState([]);
