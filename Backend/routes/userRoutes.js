@@ -24,16 +24,43 @@ router.get('/:id', async (req, res) => {
 });
 
 // Get current user from header
+// router.get('/me', async (req, res) => {
+//   try {
+//     const userId = req.headers['userid'];
+//     const user = await User.findById(userId).select('-password');
+//     if (!user) return res.status(404).json({ error: 'User not found' });
+//     res.json(user);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// });
 router.get('/me', async (req, res) => {
+  const userId = req.headers['user-id'];
+  if (!userId) return res.status(400).json({ error: 'User ID missing in headers' });
+
   try {
-    const userId = req.headers['userid'];
     const user = await User.findById(userId).select('-password');
     if (!user) return res.status(404).json({ error: 'User not found' });
-    res.json(user);
+
+    // 🔐 Safe legacy fallback
+    let cars = Array.isArray(user.cars) ? user.cars : [];
+
+    if (cars.length === 0 && user.licenseNumber && user.engineNumber) {
+      cars = [{
+        licenseNumber: user.licenseNumber,
+        engineNumber: user.engineNumber
+      }];
+    }
+
+    res.json({ ...user.toObject(), cars }); // return with cars array
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
+
+
 
 // Add a new car to current user
 router.post('/me/add-car', async (req, res) => {
